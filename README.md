@@ -1,6 +1,6 @@
 # 📝 Full Stack To-Do Application
 
-A simple **Full Stack To-Do List Web Application** built using **Spring Boot**, **PostgreSQL**, and **Vanilla HTML, CSS, JavaScript**.
+A simple **Full Stack To-Do List Web Application** built using **Spring Boot**, **H2 database**, and **Vanilla HTML, CSS, JavaScript**.
 
 This project is beginner-friendly and demonstrates how a frontend communicates with a backend REST API and stores data in a real database.
 
