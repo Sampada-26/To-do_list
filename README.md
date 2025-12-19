@@ -12,7 +12,7 @@ This project is beginner-friendly and demonstrates how a frontend communicates w
 - View all to-dos
 - Mark to-do as completed / uncompleted
 - Delete to-do items
-- Persistent storage using PostgreSQL
+- Persistent storage using H2 database
 - RESTful API using Spring Boot
 
 ---
@@ -24,7 +24,7 @@ This project is beginner-friendly and demonstrates how a frontend communicates w
 - Spring Boot
 - Spring Web
 - Spring Data JPA
-- PostgreSQL
+- H2 database
 - Maven
 
 ### Frontend
