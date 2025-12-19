@@ -38,7 +38,10 @@ function addTodo() {
     const input = document.getElementById("taskInput");
     const title = input.value.trim();
 
-    if (title === "") return;
+    if (title === "")  {
+        alert("Task cannot be empty!");
+        return;
+    }
 
     fetch(API_URL, {
         method: "POST",
@@ -59,6 +62,7 @@ function addTodo() {
 
 // Delete todo
 function deleteTodo(id) {
+    if (!confirm("Delete this task?")) return;
     fetch(`${API_URL}/${id}`, {
         method: "DELETE"
     })
