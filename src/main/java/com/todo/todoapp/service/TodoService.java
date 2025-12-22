@@ -30,6 +30,13 @@ public class TodoService {
         repository.deleteById(id);
     }
 
+    public void toggleTodo(Long id) {
+        Todo todo = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Todo not found"));
+        todo.setCompleted(!todo.isCompleted());
+        repository.save(todo);
+    }
+
     // UPDATE (toggle completed)
     public Todo updateTitle(Long id, String newTitle) {
         Todo todo = repository.findById(id)
