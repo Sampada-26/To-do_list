@@ -1,14 +1,17 @@
 const API_URL = "http://localhost:8080/api/todos";
+window.onload = loadTodos;
 
 // Load all todos when page loads
 function loadTodos() {
-    fetch(API_URL)
-        .then(response => response.json())
+    fetch(API)
+        .then(res => res.json())
         .then(todos => {
-            const todoList = document.getElementById("todoList");
-            todoList.innerHTML = "";
-
+            const List = document.getElementById("todoList");
+            List.innerHTML = "";
+            let completed = 0;
             todos.forEach(todo => {
+                if (todo.completed) completed++;
+
                 const li = document.createElement("li");
 
                 const span = document.createElement("span");
@@ -20,15 +23,23 @@ function loadTodos() {
 
                 // Toggle completed on click
                 span.onclick = () => toggleTodo(todo.id);
+                const actions = document.createElement("div");
+                actions.className = "actions";
 
-                const deleteBtn = document.createElement("button");
-                deleteBtn.textContent = "Delete";
-                deleteBtn.onclick = () => deleteTodo(todo.id);
+                const editBtn = document.createElement("button");
+                editBtn.textContent = "✏️";
+                editBtn.onclick = () => editTodo(todo.id, todo.title);
 
-                li.appendChild(span);
-                li.appendChild(deleteBtn);
-                todoList.appendChild(li);
+                const delBtn = document.createElement("button");
+                delBtn.textContent = "🗑️";
+                delBtn.onclick = () => deleteTodo(todo.id);
+
+                actions.append(editBtn, delBtn);
+                li.append(span , actions);
+
+                list.appendChild(li);
             });
+            updateStats(todos.length, completed);
         })
         .catch(error => console.error("Error loading todos:", error));
 }
@@ -36,48 +47,50 @@ function loadTodos() {
 // Add new todo
 function addTodo() {
     const input = document.getElementById("taskInput");
-    const title = input.value.trim();
+    if (!input.value.trim()) return;
 
-    if (title === "")  {
-        alert("Task cannot be empty!");
-        return;
-    }
 
-    fetch(API_URL, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            title: title,
-            completed: false
-        })
-    })
-        .then(() => {
+    function addTodo() {
+        const input = document.getElementById("taskInput");
+        if (!input.value.trim()) return;
+
+        fetch(API, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title: input.value, completed: false })
+        }).then(() => {
             input.value = "";
             loadTodos();
-        })
-        .catch(error => console.error("Error adding todo:", error));
-}
+        });
+    }
 
-// Delete todo
-function deleteTodo(id) {
-    if (!confirm("Delete this task?")) return;
-    fetch(`${API_URL}/${id}`, {
-        method: "DELETE"
-    })
-        .then(loadTodos)
-        .catch(error => console.error("Error deleting todo:", error));
-}
 
-// Toggle completed status
-function toggleTodo(id) {
-    fetch(`${API_URL}/${id}`, {
-        method: "PUT"
-    })
-        .then(loadTodos)
-        .catch(error => console.error("Error toggling todo:", error));
-}
+    function deleteTodo(id) {
+        fetch(`${API}/${id}`, { method: "DELETE" })
+            .then(loadTodos);
+    }
 
-// Initial load
-window.onload = loadTodos;
+    function toggleTodo(id) {
+        fetch(`${API}/${id}`, { method: "PUT" })
+            .then(loadTodos);
+    }
+
+    function editTodo(id, oldTitle) {
+        const newTitle = prompt("Edit task", oldTitle);
+        if (!newTitle) return;
+
+        fetch(`${API}/${id}/edit`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title: newTitle })
+        }).then(loadTodos);
+    }
+
+    function updateStats(total, completed) {
+        document.getElementById("stats").textContent =
+            `Total: ${total} | Completed: ${completed} | Pending: ${total - completed}`;
+    }
+
+    function toggleTheme() {
+        document.body.classList.toggle("dark");
+    }

@@ -31,10 +31,11 @@ public class TodoService {
     }
 
     // UPDATE (toggle completed)
-    public void toggleTodo(Long id) {
+    public Todo updateTitle(Long id, String newTitle) {
         Todo todo = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Todo not found"));
-        todo.setCompleted(!todo.isCompleted());
-        repository.save(todo);
+        todo.setTitle(newTitle);
+        return repository.save(todo);
     }
+
 }
