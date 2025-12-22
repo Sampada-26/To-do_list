@@ -80,4 +80,4 @@ function toggleTodo(id) {
 }
 
 // Initial load
-loadTodos();
+window.onload = loadTodos;
